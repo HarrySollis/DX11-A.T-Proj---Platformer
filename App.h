@@ -1,6 +1,7 @@
 #pragma once
 #include "Window.h"
-#include "ChiliTimer.h"
+#include "Timer.h"
+#include "Camera.h"
 
 class App
 {
@@ -13,7 +14,8 @@ private:
 	void DoFrame();
 private:
 	Window wnd;
-	ChiliTimer timer;
+	Timer timer;
+	Camera cam;
 	std::vector<std::unique_ptr<class Drawable>> drawables;
 	static constexpr size_t nDrawables = 180;
 };

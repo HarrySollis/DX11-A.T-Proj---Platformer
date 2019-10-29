@@ -18,8 +18,8 @@
 *	along with The Chili Direct3D Engine.  If not, see <http://www.gnu.org/licenses/>.    *
 ******************************************************************************************/
 #pragma once
-#include "ChiliWin.h"
-#include "ChiliException.h"
+#include "Win.h"
+#include "ExceptionCheck.h"
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Graphics.h"
@@ -30,9 +30,9 @@
 class Window
 {
 public:
-	class Exception : public ChiliException
+	class Exception : public ExceptionCheck
 	{
-		using ChiliException::ChiliException;
+		using ExceptionCheck::ExceptionCheck;
 	public:
 		static std::string TranslateErrorCode( HRESULT hr ) noexcept;
 	};

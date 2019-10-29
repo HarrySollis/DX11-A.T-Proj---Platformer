@@ -19,7 +19,7 @@
 *	along with The Chili DirectX Framework.  If not, see <http://www.gnu.org/licenses/>.  *
 ******************************************************************************************/
 #define FULL_WINTARD
-#include "ChiliWin.h"
+#include "Win.h"
 #include "GDIPlusManager.h"
 #include <algorithm>
 namespace Gdiplus

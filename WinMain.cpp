@@ -30,7 +30,7 @@ int CALLBACK WinMain(
 	{
 		return App{}.Go();
 	}
-	catch( const ChiliException& e )
+	catch( const ExceptionCheck& e )
 	{
 		MessageBox( nullptr,e.what(),e.GetType(),MB_OK | MB_ICONEXCLAMATION );
 	}

@@ -1,6 +1,6 @@
 #pragma once
-#include "ChiliWin.h"
-#include "ChiliException.h"
+#include "Win.h"
+#include "ExceptionCheck.h"
 #include <string>
 #include <assert.h>
 #include <memory>
@@ -83,7 +83,7 @@ public:
 		}
 	};
 public:
-	class Exception : public ChiliException
+	class Exception : public ExceptionCheck
 	{
 	public:
 		Exception(int line, const char* file, std::string note) noexcept;

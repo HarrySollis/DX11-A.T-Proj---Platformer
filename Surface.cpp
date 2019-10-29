@@ -221,14 +221,14 @@ Surface::Surface(unsigned int width, unsigned int height, std::unique_ptr<Color[
 // surface exception stuff
 Surface::Exception::Exception(int line, const char* file, std::string note) noexcept
 	:
-	ChiliException(line, file),
+	ExceptionCheck(line, file),
 	note(std::move(note))
 {}
 
 const char* Surface::Exception::what() const noexcept
 {
 	std::ostringstream oss;
-	oss << ChiliException::what() << std::endl
+	oss << ExceptionCheck::what() << std::endl
 		<< "[Note] " << GetNote();
 	whatBuffer = oss.str();
 	return whatBuffer.c_str();

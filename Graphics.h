@@ -1,6 +1,6 @@
 #pragma once
-#include "ChiliWin.h"
-#include "ChiliException.h"
+#include "Win.h"
+#include "ExceptionCheck.h"
 #include <d3d11.h>
 #include <wrl.h>
 #include <vector>
@@ -14,9 +14,9 @@ class Graphics
 {
 	friend class Bindable;
 public:
-	class Exception : public ChiliException
+	class Exception : public ExceptionCheck
 	{
-		using ChiliException::ChiliException;
+		using ExceptionCheck::ExceptionCheck;
 	};
 	class HrException : public Exception
 	{
@@ -60,8 +60,11 @@ public:
 	void DrawIndexed( UINT count ) noexcept(!IS_DEBUG);
 	void SetProjection( DirectX::FXMMATRIX proj ) noexcept;
 	DirectX::XMMATRIX GetProjection() const noexcept;
+	void SetCamera(DirectX::FXMMATRIX cam) noexcept;
+	DirectX::XMMATRIX GetCamera() const noexcept;
 private:
 	DirectX::XMMATRIX projection;
+	DirectX::XMMATRIX camera;
 #ifndef NDEBUG
 	DxgiInfoManager infoManager;
 #endif
