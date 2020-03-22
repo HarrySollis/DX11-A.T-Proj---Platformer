@@ -74,7 +74,7 @@ Melon::Melon( Graphics& gfx,
 	};
 	auto model = Sphere::MakeTesselated<Vertex>( latdist( rng ),longdist( rng ) );
 	// deform vertices of model by linear transformation
-	model.Transform( dx::XMMatrixScaling( 1.0f,1.0f,1.2f ) );
+	//model.Transform( dx::XMMatrixScaling( 1.0f,1.0f,1.2f ) );
 
 	AddBind( std::make_unique<VertexBuffer>( gfx,model.vertices ) );
 

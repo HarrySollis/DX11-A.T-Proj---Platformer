@@ -3,6 +3,7 @@
 #include "Pyramid.h"
 #include "Box.h"
 #include "TexturedCube.h"
+#include "Player.h"
 #include <memory>
 #include <algorithm>
 #include "Sheet.h"
@@ -27,14 +28,14 @@ App::App()
 		{}
 		std::unique_ptr<Drawable> operator()()
 		{
-			return std::make_unique<TexturedCube>(
+			return std::make_unique<Player>(
 				gfx, rng, adist, ddist,
 				odist, rdist
 				);
 			//switch( typedist( rng ) )
 			//{
 			//case 0:
-			//	return std::make_unique<Pyramid>(
+			//	return std::make_unique<Player>(
 			//		gfx,rng,adist,ddist,
 			//		odist,rdist
 			//	);
@@ -70,7 +71,7 @@ App::App()
 		std::uniform_real_distribution<float> ddist{ 0.0f,PI * 0.5f };
 		std::uniform_real_distribution<float> odist{ 0.0f,PI * 0.08f };
 		std::uniform_real_distribution<float> rdist{ 6.0f,20.0f };
-		std::uniform_real_distribution<float> bdist{ 0.4f,3.0f };
+		std::uniform_real_distribution<float> bdist{ 0.0f,2.0f };
 		std::uniform_int_distribution<int> latdist{ 5,20 };
 		std::uniform_int_distribution<int> longdist{ 10,40 };
 		std::uniform_int_distribution<int> typedist{ 0,4 };
