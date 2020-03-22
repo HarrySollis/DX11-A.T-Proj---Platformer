@@ -10,7 +10,6 @@ Box::Box( Graphics& gfx,
 	std::uniform_real_distribution<float>& ddist,
 	std::uniform_real_distribution<float>& odist,
 	std::uniform_real_distribution<float>& rdist)
-	//std::uniform_real_distribution<float>& bdist )
 	:
 	r( rdist( rng ) ),
 	droll( ddist( rng ) ),
@@ -82,12 +81,6 @@ Box::Box( Graphics& gfx,
 	}
 
 	AddBind( std::make_unique<TransformCbuf>( gfx,*this ) );
-	
-	// model deformation transform (per instance, not stored as bind)
-	//dx::XMStoreFloat3x3(
-	//	&mt
-	//	dx::XMMatrixScaling( 1.0f,1.0f,bdist( rng ) )
-	//);
 }
 
 void Box::Update( float dt ) noexcept
@@ -103,9 +96,7 @@ void Box::Update( float dt ) noexcept
 DirectX::XMMATRIX Box::GetTransformXM() const noexcept
 {
 	namespace dx = DirectX;
-	//return dx::XMLoadFloat3x3(&mt) *
 		return dx::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
 		dx::XMMatrixTranslation(r, 0.0f, 0.0f) *
 		dx::XMMatrixRotationRollPitchYaw(theta, phi, chi);
-		//dx::XMMatrixTranslation( 0.0f,0.0f,20.0f );
 }

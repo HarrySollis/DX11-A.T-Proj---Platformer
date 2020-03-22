@@ -4,15 +4,13 @@
 class Player : public DrawableBase<Player>
 {
 public:
-	Player(Graphics& gfx, std::mt19937& rng,
-		std::uniform_real_distribution<float>& adist,
-		std::uniform_real_distribution<float>& ddist,
-		std::uniform_real_distribution<float>& odist,
-		std::uniform_real_distribution<float>& rdist);
+	Player(Graphics& gfx);
 	void Update(float dt) noexcept override;
 	DirectX::XMMATRIX GetTransformXM() const noexcept override;
+	void Translate(DirectX::XMFLOAT3 translation) noexcept;
 private:
 	// positional
+	DirectX::XMFLOAT3 pos;
 	float r;
 	float roll = 0.0f;
 	float pitch = 0.0f;
@@ -20,6 +18,8 @@ private:
 	float theta;
 	float phi;
 	float chi;
+	static constexpr float travelSpeed = 12.0f;
+	static constexpr float rotationSpeed = 0.004f;
 	// speed (delta/s)
 	float droll;
 	float dpitch;
