@@ -27,41 +27,41 @@ App::App()
 		{}
 		std::unique_ptr<Drawable> operator()()
 		{
-			//return std::make_unique<Sheet>(
-			//	gfx, rng, adist, ddist,
-			//	odist, rdist
+			return std::make_unique<TexturedCube>(
+				gfx, rng, adist, ddist,
+				odist, rdist
+				);
+			//switch( typedist( rng ) )
+			//{
+			//case 0:
+			//	return std::make_unique<Pyramid>(
+			//		gfx,rng,adist,ddist,
+			//		odist,rdist
 			//	);
-			switch( typedist( rng ) )
-			{
-			case 0:
-				return std::make_unique<Pyramid>(
-					gfx,rng,adist,ddist,
-					odist,rdist
-				);
-			case 1:
-				return std::make_unique<Box>(
-					gfx,rng,adist,ddist,
-					odist,rdist,bdist
-				);
-			case 2:
-				return std::make_unique<Melon>(
-					gfx,rng,adist,ddist,
-					odist,rdist,longdist,latdist
-				);
-			case 3: 
-				return std::make_unique<Sheet>(
-					gfx, rng, adist, ddist,
-					odist, rdist
-					);
-			case 4:
-				return std::make_unique<TexturedCube>(
-					gfx, rng, adist, ddist,
-					odist, rdist
-					);
-			default:
-				assert( false && "bad drawable type in factory" );
-				return {};
-			}
+			//case 1:
+			//	return std::make_unique<Box>(
+			//		gfx,rng,adist,ddist,
+			//		odist,rdist,bdist
+			//	);
+			//case 2:
+			//	return std::make_unique<Melon>(
+			//		gfx,rng,adist,ddist,
+			//		odist,rdist,longdist,latdist
+			//	);
+			//case 3: 
+			//	return std::make_unique<Sheet>(
+			//		gfx, rng, adist, ddist,
+			//		odist, rdist
+			//		);
+			//case 4:
+			//	return std::make_unique<TexturedCube>(
+			//		gfx, rng, adist, ddist,
+			//		odist, rdist
+			//		);
+			//default:
+			//	assert( false && "bad drawable type in factory" );
+			//	return {};
+			//}
 		}
 	private:
 		Graphics& gfx;
@@ -95,6 +95,32 @@ void App::DoFrame()
 		d->Update( wnd.kbd.KeyIsPressed(VK_SPACE) ? 0.0f : dt );
 		d->Draw( wnd.Gfx() );
 	}
+
+	if (wnd.kbd.KeyIsPressed('W'))
+	{
+		cam.Translate({ 0.0f, 0.0f, dt });
+	}
+	if (wnd.kbd.KeyIsPressed('A'))
+	{
+		cam.Translate({ -dt,0.0f,0.0f });
+	}
+	if (wnd.kbd.KeyIsPressed('S'))
+	{
+		cam.Translate({ 0.0f,0.0f,-dt });
+	}
+	if (wnd.kbd.KeyIsPressed('D'))
+	{
+		cam.Translate({ dt,0.0f,0.0f });
+	}
+	if (wnd.kbd.KeyIsPressed('R'))
+	{
+		cam.Translate({ 0.0f,dt,0.0f });
+	}
+	if (wnd.kbd.KeyIsPressed('F'))
+	{
+		cam.Translate({ 0.0f,-dt,0.0f });
+	}	
+
 	wnd.Gfx().EndFrame();
 }
 
