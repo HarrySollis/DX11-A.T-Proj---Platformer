@@ -14,13 +14,23 @@
 namespace dx = DirectX;
 
 GDIPlusManager gdipm;
-
+//float move = 0.0f;
+float rdist;
+float vdist;
+float ldist;
 App::App()
 	:
 	wnd( 800,600,"Test window" )
 {	
-	player.push_back(std::make_unique<Player>(wnd.Gfx()));
+	//std::mt19937 rng{ std::random_device{}() };
+	//std::uniform_real_distribution<float> adist{ 2.0f,10.0f };
+	//std::uniform_real_distribution<float> ddist{ 0.0f,9.0f };
+	//std::uniform_real_distribution<float> odist{ 0.0f,9.0f };
+	//std::uniform_real<float> rdist{ move };
+	
 
+	player.push_back(std::make_unique<Player>(wnd.Gfx() /*adist, ddist, odist,*/));
+	
 	class Factory
 	{
 	public:
@@ -43,22 +53,12 @@ App::App()
 		std::uniform_real_distribution<float> ddist{ 0.0f,0.0f };
 		std::uniform_real_distribution<float> odist{ 0.0f,0.0f };
 		std::uniform_real_distribution<float> rdist{ 6.0f,6.0f };
-		//std::uniform_real_distribution<float> bdist{ 0.0f,2.0f };
-		//std::uniform_int_distribution<int> latdist{ 5,20 };
-		//std::uniform_int_distribution<int> longdist{ 10,40 };
-		//std::uniform_int_distribution<int> typedist{ 0,4 };
 	};
 	
 	drawables.reserve( nDrawables );
 	std::generate_n(std::back_inserter(drawables), nDrawables, Factory{ wnd.Gfx() });
 
-	//drawables.reserve(nPlayer);
-	//std::generate_n(std::back_inserter(player), nPlayer, Factory{ wnd.Gfx() });
-
-	//const auto s = Surface::FromFile( "Images\\kappa50.png" );
-
 	wnd.Gfx().SetProjection( dx::XMMatrixPerspectiveLH( 1.0f,3.0f / 4.0f,0.5f,40.0f ) );
-	//wnd.Gfx().SetCamera(dx::XMMatrixTranslation(0.0f, 0.0f, 20.0f));
 }
 
 void App::DoFrame()
@@ -66,36 +66,50 @@ void App::DoFrame()
 	const auto dt = timer.Mark();
 	wnd.Gfx().SetCamera(cam.GetMatrix());
 	wnd.Gfx().ClearBuffer( 0.07f,0.0f,0.12f );
+	
 	for (auto& d : drawables)
 	{
 		for (auto& p : player)
 		{
-			p->Update(wnd.kbd.KeyIsPressed(VK_SPACE) ? 0.0f : dt);
-			p->Draw(wnd.Gfx());
-			if (wnd.kbd.KeyIsPressed('W'))
+			if (wnd.kbd.KeyIsPressed('A'))
 			{
-				
+				rdist = rdist + dt * -3;
 			}
+			if (wnd.kbd.KeyIsPressed((VK_SPACE)))
+			{
+				vdist = vdist + dt * 3;
+			}
+			if (wnd.kbd.KeyIsPressed('D'))
+			{
+				rdist = rdist + dt * 3;
+			}
+			//p->GetTransformXM();
+			if (vdist > 0 & !wnd.kbd.KeyIsPressed((VK_SPACE)))
+			{
+				vdist = vdist + dt * -3;
+			}
+			p->Translate(rdist, vdist, ldist);
+			p->Draw(wnd.Gfx());
 		}
-		d->Update(wnd.kbd.KeyIsPressed(VK_SPACE) ? 0.0f : dt);
 		d->Draw(wnd.Gfx());
 	}
+	
 
-	if (wnd.kbd.KeyIsPressed('W'))
-	{
-		cam.Translate({ 0.0f, 0.0f, dt });
-	}
+	//if (wnd.kbd.KeyIsPressed('W'))
+	//{
+	//	cam.Translate({ 0.0f, 0.0f, dt });
+	//}
 	if (wnd.kbd.KeyIsPressed('A'))
 	{
-		cam.Translate({ -dt,0.0f,0.0f });
+		cam.Translate({ -dt / 2,0.0f,0.0f });
 	}
-	if (wnd.kbd.KeyIsPressed('S'))
-	{
-		cam.Translate({ 0.0f,0.0f,-dt });
-	}
+	//if (wnd.kbd.KeyIsPressed('S'))
+	//{
+	//	cam.Translate({ 0.0f,0.0f,-dt });
+	//}
 	if (wnd.kbd.KeyIsPressed('D'))
 	{
-		cam.Translate({ dt,0.0f,0.0f });
+		cam.Translate({ dt / 2,0.0f,0.0f });
 	}
 	if (wnd.kbd.KeyIsPressed('R'))
 	{

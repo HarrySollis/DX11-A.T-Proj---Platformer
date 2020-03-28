@@ -16,8 +16,8 @@ private:
 private:
 	Window wnd;
 	Timer timer;
+	//Player play;
 	Camera cam;
-	Player player1(Graphics& gfx);
 	std::vector<std::unique_ptr<class Drawable>> drawables;
 	static constexpr size_t nDrawables = 2;
 

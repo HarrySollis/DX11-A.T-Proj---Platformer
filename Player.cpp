@@ -8,22 +8,6 @@
 namespace dx = DirectX;
 
 Player::Player(Graphics& gfx)
-	//std::mt19937& rng,
-	//std::uniform_real_distribution<float>& adist,
-	//std::uniform_real_distribution<float>& ddist,
-	//std::uniform_real_distribution<float>& odist,
-	//std::uniform_real_distribution<float>& rdist)
-	//:
-	//r(rdist(rng)),
-	//droll(ddist(rng)),
-	//dpitch(ddist(rng)),
-	//dyaw(ddist(rng)),
-	//dphi(odist(rng)),
-	//dtheta(odist(rng)),
-	//dchi(odist(rng)),
-	//chi(adist(rng)),
-	//theta(adist(rng)),
-	//phi(adist(rng))
 {
 	namespace dx = DirectX;
 
@@ -71,33 +55,43 @@ Player::Player(Graphics& gfx)
 
 void Player::Update(float dt) noexcept
 {
-	roll += droll * dt;
-	pitch += dpitch * dt;
-	yaw += dyaw * dt;
-	theta += dtheta * dt;
-	phi += dphi * dt;
-	chi += dchi * dt;
+
+}
+
+void Player::Translate(float rdist, float vdist, float ldist)
+{
+	l = ldist;
+	v = vdist;
+	r = rdist;
 }
 
 DirectX::XMMATRIX Player::GetTransformXM() const noexcept
 {
 	namespace dx = DirectX;
 	return dx::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
-		dx::XMMatrixTranslation(r, 0.0f, 0.0f) *
+		dx::XMMatrixTranslation(r, v, 0.0f) *
 		dx::XMMatrixRotationRollPitchYaw(theta, phi, chi);
 	//dx::XMMatrixTranslation(0.0f, 0.0f, 20.0f);
 }
 
-void Player::Translate(DirectX::XMFLOAT3 translation) noexcept
-{
-	dx::XMStoreFloat3(&translation, dx::XMVector3Transform(
-		dx::XMLoadFloat3(&translation),
-		dx::XMMatrixRotationRollPitchYaw(pitch, yaw, 0.0f) *
-		dx::XMMatrixScaling(travelSpeed, travelSpeed, travelSpeed)
-	));
-	pos = {
-		pos.x + translation.x,
-		pos.y + translation.y,
-		pos.z + translation.z
-	};
-}
+
+
+//void Player::Translate(float x, float y, float z) noexcept
+//{
+//	dx::XMMATRIX t = dx::XMLoadFloat4x4(&_translate);
+//	dx::XMStoreFloat4x4(&_translate, dx::XMMatrixTranslation(x, y, z) * t);
+//}
+
+//void Player::Translate(DirectX::XMFLOAT3 translation) noexcept
+//{
+//	dx::XMStoreFloat3(&translation, dx::XMVector3Transform(
+//		dx::XMLoadFloat3(&translation),
+//		dx::XMMatrixRotationRollPitchYaw(pitch, yaw, 0.0f) *
+//		dx::XMMatrixScaling(travelSpeed, travelSpeed, travelSpeed)
+//	));
+//	pos = {
+//		pos.x + translation.x,
+//		pos.y + translation.y,
+//		pos.z + translation.z
+//	};
+//}
