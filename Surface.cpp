@@ -1,23 +1,3 @@
-/******************************************************************************************
-*	Chili DirectX Framework Version 16.10.01											  *
-*	Surface.cpp																			  *
-*	Copyright 2016 PlanetChili <http://www.planetchili.net>								  *
-*																						  *
-*	This file is part of The Chili DirectX Framework.									  *
-*																						  *
-*	The Chili DirectX Framework is free software: you can redistribute it and/or modify	  *
-*	it under the terms of the GNU General Public License as published by				  *
-*	the Free Software Foundation, either version 3 of the License, or					  *
-*	(at your option) any later version.													  *
-*																						  *
-*	The Chili DirectX Framework is distributed in the hope that it will be useful,		  *
-*	but WITHOUT ANY WARRANTY; without even the implied warranty of						  *
-*	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the						  *
-*	GNU General Public License for more details.										  *
-*																						  *
-*	You should have received a copy of the GNU General Public License					  *
-*	along with The Chili DirectX Framework.  If not, see <http://www.gnu.org/licenses/>.  *
-******************************************************************************************/
 #define FULL_WINTARD
 #include "Surface.h"
 #include <algorithm>
@@ -121,7 +101,7 @@ Surface Surface::FromFile(const std::string& name)
 		{
 			std::stringstream ss;
 			ss << "Loading image [" << name << "]: failed to load.";
-			throw Exception(__LINE__, __FILE__, ss.str());
+			
 		}
 
 		width = bitmap.GetWidth();
@@ -156,7 +136,7 @@ void Surface::Save(const std::string& filename) const
 		{
 			std::stringstream ss;
 			ss << "Saving surface to [" << filename << "]: failed to get encoder; size == 0.";
-			throw Exception(__LINE__, __FILE__, ss.str());
+			
 		}
 
 		pImageCodecInfo = (Gdiplus::ImageCodecInfo*)(malloc(size));
@@ -164,7 +144,7 @@ void Surface::Save(const std::string& filename) const
 		{
 			std::stringstream ss;
 			ss << "Saving surface to [" << filename << "]: failed to get encoder; failed to allocate memory.";
-			throw Exception(__LINE__, __FILE__, ss.str());
+			
 		}
 
 		GetImageEncoders(num, size, pImageCodecInfo);
@@ -183,7 +163,7 @@ void Surface::Save(const std::string& filename) const
 		std::stringstream ss;
 		ss << "Saving surface to [" << filename <<
 			"]: failed to get encoder; failed to find matching encoder.";
-		throw Exception(__LINE__, __FILE__, ss.str());
+		
 	};
 
 	CLSID bmpID;
@@ -199,7 +179,7 @@ void Surface::Save(const std::string& filename) const
 	{
 		std::stringstream ss;
 		ss << "Saving surface to [" << filename << "]: failed to save.";
-		throw Exception(__LINE__, __FILE__, ss.str());
+		
 	}
 }
 
@@ -219,27 +199,3 @@ Surface::Surface(unsigned int width, unsigned int height, std::unique_ptr<Color[
 
 
 // surface exception stuff
-Surface::Exception::Exception(int line, const char* file, std::string note) noexcept
-	:
-	ExceptionCheck(line, file),
-	note(std::move(note))
-{}
-
-const char* Surface::Exception::what() const noexcept
-{
-	std::ostringstream oss;
-	oss << ExceptionCheck::what() << std::endl
-		<< "[Note] " << GetNote();
-	whatBuffer = oss.str();
-	return whatBuffer.c_str();
-}
-
-const char* Surface::Exception::GetType() const noexcept
-{
-	return "Chili Graphics Exception";
-}
-
-const std::string& Surface::Exception::GetNote() const noexcept
-{
-	return note;
-}

@@ -1,22 +1,3 @@
-/******************************************************************************************
-*	Chili Direct3D Engine																  *
-*	Copyright 2018 PlanetChili <http://www.planetchili.net>								  *
-*																						  *
-*	This file is part of Chili Direct3D Engine.											  *
-*																						  *
-*	Chili Direct3D Engine is free software: you can redistribute it and/or modify		  *
-*	it under the terms of the GNU General Public License as published by				  *
-*	the Free Software Foundation, either version 3 of the License, or					  *
-*	(at your option) any later version.													  *
-*																						  *
-*	The Chili Direct3D Engine is distributed in the hope that it will be useful,		  *
-*	but WITHOUT ANY WARRANTY; without even the implied warranty of						  *
-*	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the						  *
-*	GNU General Public License for more details.										  *
-*																						  *
-*	You should have received a copy of the GNU General Public License					  *
-*	along with The Chili Direct3D Engine.  If not, see <http://www.gnu.org/licenses/>.    *
-******************************************************************************************/
 #pragma once
 #include "Win.h"
 #include "ExceptionCheck.h"
@@ -30,29 +11,7 @@
 class Window
 {
 public:
-	class Exception : public ExceptionCheck
-	{
-		using ExceptionCheck::ExceptionCheck;
-	public:
-		static std::string TranslateErrorCode( HRESULT hr ) noexcept;
-	};
-	class HrException : public Exception
-	{
-	public:
-		HrException( int line,const char* file,HRESULT hr ) noexcept;
-		const char* what() const noexcept override;
-		const char* GetType() const noexcept override;
-		HRESULT GetErrorCode() const noexcept;
-		std::string GetErrorDescription() const noexcept;
-	private:
-		HRESULT hr;
-	};
-	class NoGfxException : public Exception
-	{
-	public:
-		using Exception::Exception;
-		const char* GetType() const noexcept override;
-	};
+	
 private:
 	// singleton manages registration/cleanup of window class
 	class WindowClass
@@ -65,7 +24,7 @@ private:
 		~WindowClass();
 		WindowClass( const WindowClass& ) = delete;
 		WindowClass& operator=( const WindowClass& ) = delete;
-		static constexpr const char* wndClassName = "Chili Direct3D Engine Window";
+		static constexpr const char* wndClassName = "Test DirectX 11 Engine Window";
 		static WindowClass wndClass;
 		HINSTANCE hInst;
 	};

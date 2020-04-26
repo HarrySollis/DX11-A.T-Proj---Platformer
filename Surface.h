@@ -83,16 +83,7 @@ public:
 		}
 	};
 public:
-	class Exception : public ExceptionCheck
-	{
-	public:
-		Exception(int line, const char* file, std::string note) noexcept;
-		const char* what() const noexcept override;
-		const char* GetType() const noexcept override;
-		const std::string& GetNote() const noexcept;
-	private:
-		std::string note;
-	};
+	
 public:
 	Surface(unsigned int width, unsigned int height) noexcept;
 	Surface(Surface&& source) noexcept;
