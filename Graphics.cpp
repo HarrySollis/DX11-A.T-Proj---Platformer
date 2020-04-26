@@ -4,7 +4,7 @@
 #include <d3dcompiler.h>
 #include <cmath>
 #include <DirectXMath.h>
-#include "GraphicsThrowMacros.h"
+//#include "GraphicsThrowMacros.h"
 
 namespace wrl = Microsoft::WRL;
 namespace dx = DirectX;
@@ -41,7 +41,7 @@ Graphics::Graphics( HWND hWnd )
 	HRESULT hr;
 
 	// create device and front/back buffers, and swap chain and rendering context
-	GFX_THROW_INFO( D3D11CreateDeviceAndSwapChain(
+	D3D11CreateDeviceAndSwapChain(
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
@@ -54,12 +54,12 @@ Graphics::Graphics( HWND hWnd )
 		&pDevice,
 		nullptr,
 		&pContext
-	) );
+	);
 
 	// gain access to texture subresource in swap chain (back buffer)
 	wrl::ComPtr<ID3D11Resource> pBackBuffer;
-	GFX_THROW_INFO( pSwap->GetBuffer( 0,__uuidof(ID3D11Resource),&pBackBuffer ) );
-	GFX_THROW_INFO( pDevice->CreateRenderTargetView( pBackBuffer.Get(),nullptr,&pTarget ) );
+	pSwap->GetBuffer( 0,__uuidof(ID3D11Resource),&pBackBuffer );
+	pDevice->CreateRenderTargetView( pBackBuffer.Get(),nullptr,&pTarget );
 	
 	// create depth stensil state
 	D3D11_DEPTH_STENCIL_DESC dsDesc = {};
@@ -67,7 +67,7 @@ Graphics::Graphics( HWND hWnd )
 	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
 	wrl::ComPtr<ID3D11DepthStencilState> pDSState;
-	GFX_THROW_INFO( pDevice->CreateDepthStencilState( &dsDesc,&pDSState ) );
+	pDevice->CreateDepthStencilState( &dsDesc,&pDSState );
 
 	// bind depth state
 	pContext->OMSetDepthStencilState( pDSState.Get(),1u );
@@ -84,16 +84,16 @@ Graphics::Graphics( HWND hWnd )
 	descDepth.SampleDesc.Quality = 0u;
 	descDepth.Usage = D3D11_USAGE_DEFAULT;
 	descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	GFX_THROW_INFO( pDevice->CreateTexture2D( &descDepth,nullptr,&pDepthStencil ) );
+	pDevice->CreateTexture2D( &descDepth,nullptr,&pDepthStencil );
 
 	// create view of depth stensil texture
 	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
 	descDSV.Format = DXGI_FORMAT_D32_FLOAT;
 	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	descDSV.Texture2D.MipSlice = 0u;
-	GFX_THROW_INFO( pDevice->CreateDepthStencilView(
+	pDevice->CreateDepthStencilView(
 		pDepthStencil.Get(),&descDSV,&pDSV
-	) );
+	);
 
 	// bind depth stensil view to OM
 	pContext->OMSetRenderTargets( 1u,pTarget.GetAddressOf(),pDSV.Get() );
@@ -119,11 +119,11 @@ void Graphics::EndFrame()
 	{
 		if( hr == DXGI_ERROR_DEVICE_REMOVED )
 		{
-			throw GFX_DEVICE_REMOVED_EXCEPT( pDevice->GetDeviceRemovedReason() );
+			pDevice->GetDeviceRemovedReason();
 		}
 		else
 		{
-			throw GFX_EXCEPT( hr );
+			hr;
 		}
 	}
 }

@@ -1,6 +1,6 @@
 #include "Player.h"
 #include "BindableBase.h"
-#include "GraphicsThrowMacros.h"
+//#include "GraphicsThrowMacros.h"
 #include "Cube.h"
 #include "Surface.h"
 #include "Texture.h"

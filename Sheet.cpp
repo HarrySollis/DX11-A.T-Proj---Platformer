@@ -1,6 +1,6 @@
 #include "Sheet.h"
 #include "BindableBase.h"
-#include "GraphicsThrowMacros.h"
+//#include "GraphicsThrowMacros.h"
 #include "Plane.h"
 #include "Surface.h"
 #include "Texture.h"

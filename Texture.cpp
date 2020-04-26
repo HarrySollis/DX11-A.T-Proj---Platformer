@@ -1,12 +1,12 @@
 #include "Texture.h"
 #include "Surface.h"
-#include "GraphicsThrowMacros.h"
+//#include "GraphicsThrowMacros.h"
 
 namespace wrl = Microsoft::WRL;
 
 Texture::Texture(Graphics& gfx, const Surface& s)
 {
-	INFOMAN(gfx);
+	gfx;
 
 	// create texture resource
 	D3D11_TEXTURE2D_DESC textureDesc = {};
@@ -25,9 +25,9 @@ Texture::Texture(Graphics& gfx, const Surface& s)
 	sd.pSysMem = s.GetBufferPtr();
 	sd.SysMemPitch = s.GetWidth() * sizeof(Surface::Color);
 	wrl::ComPtr<ID3D11Texture2D> pTexture;
-	GFX_THROW_INFO(GetDevice(gfx)->CreateTexture2D(
+	GetDevice(gfx)->CreateTexture2D(
 		&textureDesc, &sd, &pTexture
-	));
+	);
 
 	// create the resource view on the texture
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
@@ -35,9 +35,9 @@ Texture::Texture(Graphics& gfx, const Surface& s)
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MostDetailedMip = 0;
 	srvDesc.Texture2D.MipLevels = 1;
-	GFX_THROW_INFO(GetDevice(gfx)->CreateShaderResourceView(
+	GetDevice(gfx)->CreateShaderResourceView(
 		pTexture.Get(), &srvDesc, &pTextureView
-	));
+	);
 }
 
 void Texture::Bind(Graphics& gfx) noexcept
