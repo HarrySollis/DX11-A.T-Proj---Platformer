@@ -9,7 +9,7 @@ public:
 		//std::uniform_real_distribution<float>& adist,
 		//std::uniform_real_distribution<float>& ddist,
 		//std::uniform_real_distribution<float>& odist,
-		/*float &rdist*/);
+	/*float &rdist*/);
 	void Update(float dt) noexcept override;
 	void Translate(float rdist, float vdist, float ldist);
 	DirectX::XMMATRIX GetTransformXM() const noexcept override;
@@ -19,7 +19,7 @@ public:
 private:
 	// positional
 	DirectX::XMFLOAT3 pos;
-	
+
 	float roll = 0.0f;
 	float pitch = 0.0f;
 	float yaw = 0.0f;

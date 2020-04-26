@@ -152,6 +152,7 @@
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ExceptionCheck.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="TexturedCube.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Drawable.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ExceptionCheck.h" />
     <ClInclude Include="ObjMath.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Win.h" />
     <ClInclude Include="Cone.h" />
