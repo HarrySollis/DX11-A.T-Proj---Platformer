@@ -1,6 +1,6 @@
 #pragma once
 #include "Win.h"
-#include "ExceptionCheck.h"
+
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Graphics.h"

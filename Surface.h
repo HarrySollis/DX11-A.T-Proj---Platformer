@@ -1,6 +1,6 @@
 #pragma once
 #include "Win.h"
-#include "ExceptionCheck.h"
+
 #include <string>
 #include <assert.h>
 #include <memory>
