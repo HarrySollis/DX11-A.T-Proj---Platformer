@@ -18,8 +18,8 @@ private:
 	Timer timer;
 	//Player play;
 	Camera cam;
-	std::vector<std::unique_ptr<class Drawable>> drawables;
-	static constexpr size_t nDrawables = 2;
+	//std::vector<std::unique_ptr<class Drawable>> drawables;
+	//static constexpr size_t nDrawables = 2;
 
 	std::vector<std::unique_ptr<class Player>> player;
 	//static constexpr size_t nPlayer = 1;

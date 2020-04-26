@@ -5,13 +5,16 @@ class Box : public DrawableBase<Box>
 {
 public:
 	Box(Graphics& gfx, std::mt19937& rng,
-		std::uniform_real_distribution<float>& adist,
-		std::uniform_real_distribution<float>& ddist,
-		std::uniform_real_distribution<float>& odist,
-		std::uniform_real_distribution<float>& rdist);
-	//std::uniform_real_distribution<float>& bdist );
+		std::uniform_real_distribution<float>& xdist,
+		std::uniform_real_distribution<float>& ydist,
+		std::uniform_real_distribution<float>& zdist);
 	void Update(float dt) noexcept override;
+	void Translate(float xdist, float ydist, float zdist);
 	DirectX::XMMATRIX GetTransformXM() const noexcept override;
+	float XVectorTransform;
+	float YVectorTransform;
+	float ZVectorTransform;
+
 private:
 	// positional
 	float r;

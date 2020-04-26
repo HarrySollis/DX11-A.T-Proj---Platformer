@@ -22,41 +22,46 @@ App::App()
 	:
 	wnd(800, 600, "Test window")
 {
-	//std::mt19937 rng{ std::random_device{}() };
-	//std::uniform_real_distribution<float> adist{ 2.0f,10.0f };
-	//std::uniform_real_distribution<float> ddist{ 0.0f,9.0f };
-	//std::uniform_real_distribution<float> odist{ 0.0f,9.0f };
+	std::mt19937 rng{ std::random_device{}() };
+	std::uniform_real_distribution<float> xdist{ 2.0f,10.0f };
+	std::uniform_real_distribution<float> ydist{ 0.0f,9.0f };
+	std::uniform_real_distribution<float> zdist{ 0.0f,0.0f };
 	//std::uniform_real<float> rdist{ move };
 
 
 	player.push_back(std::make_unique<Player>(wnd.Gfx() /*adist, ddist, odist,*/));
-
-	class Factory
+	
+	for (int i = 0; i < 2; i++)
 	{
-	public:
-		Factory(Graphics& gfx)
-			:
-			gfx(gfx)
-		{}
+		boxes.push_back(std::make_unique<Box>(wnd.Gfx(), rng, xdist, ydist, zdist));
+	}
 
-		std::unique_ptr<Drawable> operator()()
-		{
-			return std::make_unique<Box>(
-				gfx, rng, adist, ddist,
-				odist, rdist
-				);
-		}
-	private:
-		Graphics& gfx;
-		std::mt19937 rng{ std::random_device{}() };
-		std::uniform_real_distribution<float> adist{ 0.0f,0.0f };
-		std::uniform_real_distribution<float> ddist{ 0.0f,0.0f };
-		std::uniform_real_distribution<float> odist{ 0.0f,0.0f };
-		std::uniform_real_distribution<float> rdist{ 6.0f,6.0f };
-	};
-
-	drawables.reserve(nDrawables);
-	std::generate_n(std::back_inserter(drawables), nDrawables, Factory{ wnd.Gfx() });
+	//class Factory
+	//{
+	//public:
+	//	Factory(Graphics& gfx)
+	//		:
+	//		gfx(gfx)
+	//	{}
+	//
+	//	std::unique_ptr<Drawable> operator()()
+	//	{
+	//		return std::make_unique<Box>(
+	//			gfx, rng, adist, ddist,
+	//			odist, rdist
+	//			);
+	//	}
+	//private:
+	//	Graphics& gfx;
+	//	std::mt19937 rng{ std::random_device{}() };
+	//	std::uniform_real_distribution<float> adist{ 0.0f,0.0f };
+	//	std::uniform_real_distribution<float> ddist{ 0.0f,0.0f };
+	//	std::uniform_real_distribution<float> odist{ 0.0f,0.0f };
+	//	std::uniform_real_distribution<float> rdist{ 6.0f,6.0f };
+	//};
+	//
+	//drawables.reserve(nDrawables);
+	//std::generate_n(std::back_inserter(drawables), nDrawables, Factory{ wnd.Gfx() });
 
 	wnd.Gfx().SetProjection(dx::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 40.0f));
 }
@@ -67,31 +72,31 @@ void App::DoFrame()
 	wnd.Gfx().SetCamera(cam.GetMatrix());
 	wnd.Gfx().ClearBuffer(0.07f, 0.0f, 0.12f);
 
-	for (auto& d : drawables)
+	for (auto& b : boxes)
 	{
-		for (auto& p : player)
+		b->Draw(wnd.Gfx());
+	}
+	for (auto& p : player)
+	{
+		if (wnd.kbd.KeyIsPressed('A'))
 		{
-			if (wnd.kbd.KeyIsPressed('A'))
-			{
-				rdist = rdist + dt * -3;
-			}
-			if (wnd.kbd.KeyIsPressed((VK_SPACE)))
-			{
-				vdist = vdist + dt * 3;
-			}
-			if (wnd.kbd.KeyIsPressed('D'))
-			{
-				rdist = rdist + dt * 3;
-			}
-			//p->GetTransformXM();
-			if (vdist > 0 & !wnd.kbd.KeyIsPressed((VK_SPACE)))
-			{
-				vdist = vdist + dt * -3;
-			}
-			p->Translate(rdist, vdist, ldist);
-			p->Draw(wnd.Gfx());
+			rdist = rdist + dt * -3;
 		}
-		d->Draw(wnd.Gfx());
+		if (wnd.kbd.KeyIsPressed((VK_SPACE)))
+		{
+			vdist = vdist + dt * 3;
+		}
+		if (wnd.kbd.KeyIsPressed('D'))
+		{
+			rdist = rdist + dt * 3;
+		}
+		//p->GetTransformXM();
+		if (vdist > 0 & !wnd.kbd.KeyIsPressed((VK_SPACE)))
+		{
+			vdist = vdist + dt * -3;
+		}
+		p->Translate(rdist, vdist, ldist);
+		p->Draw(wnd.Gfx());
 	}
 
 
