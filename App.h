@@ -27,5 +27,5 @@ private:
 	//static constexpr size_t nPlayer = 1;
 
 	std::vector<std::unique_ptr<class Box>> boxes;
-	std::vector<std::unique_ptr<class TexturedCube>> spawn;
+	std::vector<std::unique_ptr<class Box>> spawn;
 };

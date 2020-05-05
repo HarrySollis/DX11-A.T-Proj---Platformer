@@ -6,8 +6,8 @@ namespace dx = DirectX;
 
 Camera::Camera() noexcept
 {
-	FollowPlayer(dx::XMLoadFloat3(&Player().GetPlayerPos().pos()));
-	//Reset();
+	//FollowPlayer(dx::XMLoadFloat3(&Player().GetPlayerPos().pos()));
+	Reset();
 }
 
 DirectX::XMMATRIX Camera::GetMatrix() const noexcept
@@ -27,7 +27,7 @@ void Camera::Reset() noexcept
 
 void Camera::FollowPlayer(dx::XMVECTOR player_pos)
 {
-	player_pos = dx::XMLoadFloat3(&Player().GetPlayerPos.pos());
+	//player_pos = dx::XMLoadFloat3(&Player().GetPlayerPos.pos());
 	static float phi = PI / 2;
 	float CamX, CamY, CamZ;
 	phi = rot.y / 10;

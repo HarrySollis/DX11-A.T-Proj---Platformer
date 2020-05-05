@@ -100,20 +100,6 @@ void Box::Update(float dt) noexcept
 	
 }
 
-void Box::GetPositionX(float minXBound, float maxXBound)
-{
-	
-}
-
-void Box::GetPositionY(float minYBound, float maxYBound)
-{
-	
-}
-
-void Box::GetPositionZ(float minZBound, float maxZBound)
-{
-
-}
 
 void Box::Translate(float xdist, float ydist, float zdist)
 {
