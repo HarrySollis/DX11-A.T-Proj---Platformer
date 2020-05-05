@@ -4,6 +4,7 @@
 #include "Cube.h"
 #include "Surface.h"
 #include "Texture.h"
+#include <math.h>
 
 namespace dx = DirectX;
 
@@ -26,7 +27,7 @@ Player::Player(Graphics& gfx)
 
 		AddStaticBind(std::make_unique<VertexBuffer>(gfx, model.vertices));
 
-		AddStaticBind(std::make_unique<Texture>(gfx, Surface::FromFile("Images\\PlayerHead.png")));
+		AddStaticBind(std::make_unique<Texture>(gfx, Surface::FromFile("Images\\CubeMap.png")));
 
 		auto pvs = std::make_unique<VertexShader>(gfx, L"TextureVS.cso");
 		auto pvsbc = pvs->GetBytecode();
@@ -53,6 +54,19 @@ Player::Player(Graphics& gfx)
 	AddBind(std::make_unique<TransformCbuf>(gfx, *this));
 }
 
+//void CreateBoundingBox(std::vector<dx::XMFLOAT3>& vertPosArray)
+//{
+//	dx::XMFLOAT3 minVertex = dx::XMFLOAT3(FLT_MAX, FLT_MAX, FLT_MAX);
+//	dx::XMFLOAT3 maxVertex = dx::XMFLOAT3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+//
+//	for (UINT i = 0; i < vertPosArray.size(); i++)
+//	{
+//		minVertex.x = dx::min(minVertex.x, vertPosArray[i].x);
+//		minVertex.y = min(minVertex.y, vertPosArray[i].x);
+//		minVertex.z = min(minVertex.z, vertPosArray[i].x);
+//	}
+//}
+
 void Player::Update(float dt) noexcept
 {
 
@@ -60,17 +74,21 @@ void Player::Update(float dt) noexcept
 
 void Player::Translate(float rdist, float vdist, float ldist)
 {
-	l = ldist;
-	v = vdist;
-	r = rdist;
+	pos.z = ldist;
+	pos.y = vdist;
+	pos.x = rdist;
+}
+
+DirectX::XMVECTOR Player::GetPlayerPos()
+{
+	return XMLoadFloat3(&pos);
 }
 
 DirectX::XMMATRIX Player::GetTransformXM() const noexcept
 {
 	namespace dx = DirectX;
-	return dx::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
-		dx::XMMatrixTranslation(r, v, 0.0f) *
-		dx::XMMatrixRotationRollPitchYaw(theta, phi, chi);
+	return dx::XMMatrixRotationRollPitchYaw(0.0f, 0.0f, 0.0f) *
+		dx::XMMatrixTranslation(pos.x, pos.y, pos.z);
 	//dx::XMMatrixTranslation(0.0f, 0.0f, 20.0f);
 }
 

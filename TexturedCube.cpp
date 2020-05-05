@@ -6,23 +6,7 @@
 #include "Texture.h"
 
 
-TexturedCube::TexturedCube(Graphics& gfx,
-	std::mt19937& rng,
-	std::uniform_real_distribution<float>& adist,
-	std::uniform_real_distribution<float>& ddist,
-	std::uniform_real_distribution<float>& odist,
-	std::uniform_real_distribution<float>& rdist)
-	:
-	r(rdist(rng)),
-	droll(ddist(rng)),
-	dpitch(ddist(rng)),
-	dyaw(ddist(rng)),
-	dphi(odist(rng)),
-	dtheta(odist(rng)),
-	dchi(odist(rng)),
-	chi(adist(rng)),
-	theta(adist(rng)),
-	phi(adist(rng))
+TexturedCube::TexturedCube(Graphics& gfx)	
 {
 	namespace dx = DirectX;
 
@@ -66,23 +50,31 @@ TexturedCube::TexturedCube(Graphics& gfx,
 	}
 
 	AddBind(std::make_unique<TransformCbuf>(gfx, *this));
+
+	dx::XMStoreFloat3x3(
+		&mt,
+		dx::XMMatrixScaling(2.0f, 2.0f, 2.0f)
+	);
+}
+
+void TexturedCube::Translate(float xdist, float ydist, float zdist)
+{
+	X = xdist;
+	Y = ydist;
+	Z = zdist;
 }
 
 void TexturedCube::Update(float dt) noexcept
 {
-	roll += droll * dt;
-	pitch += dpitch * dt;
-	yaw += dyaw * dt;
-	theta += dtheta * dt;
-	phi += dphi * dt;
-	chi += dchi * dt;
+	
 }
 
 DirectX::XMMATRIX TexturedCube::GetTransformXM() const noexcept
 {
 	namespace dx = DirectX;
-	return dx::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
-		dx::XMMatrixTranslation(r, 0.0f, 0.0f) *
-		dx::XMMatrixRotationRollPitchYaw(theta, phi, chi);
+	return dx::XMLoadFloat3x3(&mt) *
+		dx::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
+		dx::XMMatrixTranslation(X, Y, Z);
+		//dx::XMMatrixRotationRollPitchYaw(theta, phi, chi);
 		//dx::XMMatrixTranslation(0.0f, 0.0f, 20.0f);
 }

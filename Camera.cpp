@@ -1,39 +1,49 @@
 #include "Camera.h"
 #include "ObjMath.h"
+#include "Player.h"
 
 namespace dx = DirectX;
 
 Camera::Camera() noexcept
 {
-	Reset();
+	FollowPlayer(dx::XMLoadFloat3(&Player().GetPlayerPos().pos()));
+	//Reset();
 }
 
 DirectX::XMMATRIX Camera::GetMatrix() const noexcept
 {
-	//const auto pos = dx::XMVector3Transform(
-	//	dx::XMVectorSet(0.0f, 0.0f, -r, 0.0f),
-	//	dx::XMMatrixRotationRollPitchYaw(phi, -theta, 0.0f)
-	//);
-	//return dx::XMMatrixLookAtLH(
-	//	pos, dx::XMVectorZero(),
-	//	dx::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)
-	//) * dx::XMMatrixRotationRollPitchYaw(
-	//	pitch, -yaw, roll
-	//);
 
 	return dx::XMMatrixTranslation(-pos.x, -pos.y, -pos.z) *
-		dx::XMMatrixRotationRollPitchYaw(-pitch, -yaw, 0.0f);
+		dx::XMMatrixRotationRollPitchYaw(-pitch, -yaw, roll);
 }
 
 void Camera::Reset() noexcept
 {
-	pos = { 0.0f, 7.5f, -18.0f };
+	pos = { -5.0f, 2.5f, 0.0f };
+	roll = 0.35f;
 	pitch = 0.0f;
-	yaw = 0.0f;
+	yaw = 1.57f;
 }
 
-void Camera::Rotate(float dx, float dy) noexcept
+void Camera::FollowPlayer(dx::XMVECTOR player_pos)
 {
+	player_pos = dx::XMLoadFloat3(&Player().GetPlayerPos.pos());
+	static float phi = PI / 2;
+	float CamX, CamY, CamZ;
+	phi = rot.y / 10;
+	CamX = xDist * cosf(((3.0f * PI) / 2.0f) * ((rot.x / 3) / 90)) * sinf(phi);
+	CamY = yDist * cosf(phi);
+	CamZ = zDist * sinf(((3.0f * PI) / 2.0f) * ((rot.x / 3) / 90)) * sinf(phi);
+	dx::XMFLOAT3 pos;
+	XMStoreFloat3(&pos, player_pos);
+	position = dx::XMFLOAT3(pos.x + CamX, pos.y + -CamY, pos.z + CamZ);
+	dx::XMFLOAT3 up(0.0f, 1.0f, 0.0f);
+	m_viewMatrix = dx::XMMatrixLookAtLH(dx::XMLoadFloat3(&position), player_pos, XMLoadFloat3(&up));
+}
+
+void Camera::Rotate(float dx, float dy, float dz) noexcept
+{
+	roll = wrap_angle(roll + dz * rotationSpeed);
 	yaw = wrap_angle(yaw + dx * rotationSpeed);
 	pitch = std::clamp(pitch + dy * rotationSpeed, -PI / 2.0f, PI / 2.0f);
 }

@@ -16,9 +16,18 @@ public:
 	float l;
 	float v;
 	float r;
+	DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(l, v, r);
+
+	DirectX::XMVECTOR GetPlayerPos();
+
+	//void CreateBoundingVolumes(std::vector<dx::XMFLOAT3>& vertPosArray,
+	//	std::vector<dx::XMFLOAT3>& boundingBoxVerts,
+	//	std::vector<DWORD>& boundingBoxIndex,
+	//	float& boundingSphere,
+	//	dx::XMVECTOR& objectCenterOffset);
 private:
 	// positional
-	DirectX::XMFLOAT3 pos;
+//	DirectX::XMFLOAT3 pos;
 
 	float roll = 0.0f;
 	float pitch = 0.0f;
@@ -35,4 +44,6 @@ private:
 	float dtheta;
 	float dphi;
 	float dchi;
+	// model transform
+	DirectX::XMFLOAT3X3 mt;
 };

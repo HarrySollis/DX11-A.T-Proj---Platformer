@@ -3,6 +3,7 @@
 ////#include "GraphicsThrowMacros.h"
 #include "Cube.h"
 
+namespace dx = DirectX;
 
 Box::Box(Graphics& gfx,
 	std::mt19937& rng,
@@ -10,11 +11,16 @@ Box::Box(Graphics& gfx,
 	std::uniform_real_distribution<float>& ydist,
 	std::uniform_real_distribution<float>& zdist)
 	:
-	XVectorTransform(xdist(rng)),
-	YVectorTransform(ydist(rng)),
-	ZVectorTransform(zdist(rng))
+	pos{ (xdist(rng)) ,
+	(ydist(rng)),
+	(zdist(rng)) }
 {
-	namespace dx = DirectX;
+	float BoxBoundingSphere = 0.0f;
+	std::vector<DirectX::XMFLOAT3> BoundingBoxVertPosArray;
+	std::vector<DWORD> BoundingBoxVertIndexArray;
+	DirectX::XMVECTOR boxCentreOffset;
+
+	
 
 	if (!IsStaticInitialized())
 	{
@@ -75,30 +81,53 @@ Box::Box(Graphics& gfx,
 	AddBind(std::make_unique<TransformCbuf>(gfx, *this));
 
 	// model deformation transform (per instance, not stored as bind)
-	//dx::XMStoreFloat3x3(
-	//	&mt
-	//	dx::XMMatrixScaling( 1.0f,1.0f,bdist( rng ) )
-	//);
+	dx::XMStoreFloat3x3(
+		&mt,
+		dx::XMMatrixScaling( XVectorScale, YVectorScale, ZVectorScale )
+	);
 }
 
+//void CreateBoundingVolumes(std::vector<dx::XMFLOAT3> & vertPosArray,
+//	std::vector<dx::XMFLOAT3>& boundingBoxVerts,
+//	std::vector<DWORD>& boundingBoxIndex,
+//	float& boundingSphere,
+//	dx::XMVECTOR& objectCenterOffset)
+//{
+//
+//}
 void Box::Update(float dt) noexcept
+{
+	
+}
+
+void Box::GetPositionX(float minXBound, float maxXBound)
+{
+	
+}
+
+void Box::GetPositionY(float minYBound, float maxYBound)
+{
+	
+}
+
+void Box::GetPositionZ(float minZBound, float maxZBound)
 {
 
 }
 
 void Box::Translate(float xdist, float ydist, float zdist)
 {
-	XVectorTransform = xdist;
-	YVectorTransform = ydist;
-	ZVectorTransform = zdist;
+	pos.x = xdist;
+	pos.y = ydist;
+	pos.z = zdist;
 }
 
 DirectX::XMMATRIX Box::GetTransformXM() const noexcept
 {
 	namespace dx = DirectX;
-	//return dx::XMLoadFloat3x3(&mt) *
-	return dx::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
-		dx::XMMatrixTranslation(XVectorTransform, YVectorTransform, ZVectorTransform) *
+	return dx::XMLoadFloat3x3(&mt) *
+	 dx::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
+		dx::XMMatrixTranslation(pos.x, pos.y, pos.z) *
 		dx::XMMatrixRotationRollPitchYaw(theta, phi, chi);
 	//dx::XMMatrixTranslation( 0.0f,0.0f,20.0f );
 }

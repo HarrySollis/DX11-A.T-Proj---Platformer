@@ -16,6 +16,8 @@ private:
 private:
 	Window wnd;
 	Timer timer;
+
+
 	//Player play;
 	Camera cam;
 	//std::vector<std::unique_ptr<class Drawable>> drawables;
@@ -25,4 +27,5 @@ private:
 	//static constexpr size_t nPlayer = 1;
 
 	std::vector<std::unique_ptr<class Box>> boxes;
+	std::vector<std::unique_ptr<class TexturedCube>> spawn;
 };

@@ -15,6 +15,33 @@ public:
 	float YVectorTransform;
 	float ZVectorTransform;
 
+	DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(XVectorTransform, YVectorTransform, ZVectorTransform);
+
+	
+	float XVectorScale=2.0f;
+	float YVectorScale=0.5f;
+	float ZVectorScale=2.5f;
+
+	float BoxminXBound;
+	float BoxmaxXBound;
+	float BoxminYBound;
+	float BoxmaxYBound;
+
+	void GetPositionX(float minXBound, float maxXBound);
+	void GetPositionY(float minYBound, float maxYBound);
+	void GetPositionZ(float minZBound, float maxZBound);
+
+	//float BoxBoundingSphere = 0.0f;
+	//std::vector<DirectX::XMFLOAT3> BoundingBoxVertPosArray;
+	//std::vector<DWORD> BoundingBoxVertIndexArray;
+	//DirectX::XMVECTOR boxCentreOffset;
+	//
+	//void CreateBoundingVolumes(std::vector<dx::XMFLOAT3>& vertPosArray,
+	//	std::vector<dx::XMFLOAT3>& boundingBoxVerts,
+	//	std::vector<DWORD>& boundingBoxIndex,
+	//	float& boundingSphere,
+	//	dx::XMVECTOR& objectCenterOffset);
+
 private:
 	// positional
 	float r;
