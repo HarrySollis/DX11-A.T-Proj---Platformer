@@ -62,11 +62,11 @@ App::App()
 
 	player.push_back(std::make_unique<Player>(wnd.Gfx()));
 	//spawn.push_back(std::make_unique<Box>(wnd.Gfx(), rng, xdist, ydist, zdist));
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 3; i++)
 	{
-		std::uniform_real_distribution<float> xdist{ 0.0f, 0.0f };
-		std::uniform_real_distribution<float> ydist{ -1.0f, -1.0f };
-		std::uniform_real_distribution<float> zdist{ -2.0f, 2.0f };
+		std::uniform_real_distribution<float> xdist{ 0.0f, 10.0f };
+		std::uniform_real_distribution<float> ydist{ 0.0f, 0.0f };
+		std::uniform_real_distribution<float> zdist{ -3.0f, 6.0f };
 		boxes.push_back(std::make_unique<Box>(wnd.Gfx(), rng, xdist, ydist, zdist));
 	}
 
@@ -121,33 +121,18 @@ void App::DoFrame()
 		//}
 		for (auto& b : boxes)
 		{
-			//for (auto& s : spawn)
-			//{
-			//	if (wnd.kbd.KeyIsPressed((VK_SPACE)) & p->pos.z - 0.75f < s->pos.z + 1.0f & p->pos.z + 0.75f > s->pos.z - 1.0f & p->pos.x - 0.75f < s->pos.x + 1.0f & p->pos.x + 0.75f > s->pos.x - 1.0f & grounded)
-			//	{
-			//		vdist = vdist + dt * 3;
-			//	}
-			//	if (p->pos.y >= 3)
-			//	{
-			//		//grounded = false;
-			//	}
-			//	if (!wnd.kbd.KeyIsPressed((VK_SPACE)) & p->pos.y - 0.75f > s->pos.y + 0.5f & p->pos.z - 0.75f < s->pos.z + 1.0f & p->pos.z + 0.75f > s->pos.z - 1.0f & p->pos.x - 0.75f < s->pos.x + 1.0f & p->pos.x + 0.75f > s->pos.x - 1.0f)
-			//	{
-			//		//grounded = false;
-			//		vdist = vdist + dt * -3;
-			//	}
-			//	if ((p->pos.z - 0.75f > s->pos.z + 1.0f || p->pos.z + 0.75f < s->pos.z - 1.0f) || (p->pos.x - 0.75f > s->pos.x + 1.0f || p->pos.x + 0.75f < s->pos.x - 1.0f))
-			//	{
-			//		vdist = vdist + dt * -3;
-			//		//if (vdist == -4.0f)
-			//		//{
-			//		//	p->pos.y = 0.0f;
-			//		//}
-			//	}
-			//if (p->pos.x > b->pos.x - 1  & p->pos.z < b->pos.z + 1.0f & p->pos.z > b->pos.z - 1.0f)
-			//{
-			//	rdist = rdist * 0.0f;
-			//}
+			if (p->pos.x + 0.5f > b->pos.x - 1 & p->pos.y - 0.5f < b->pos.y + 0.25f & p->pos.z + 0.5f > b->pos.z - 1.0f & p->pos.z - 0.5f < b->pos.z + 1.0f)
+			{
+				b->pos.x = b->pos.x +dt * 3;
+			}
+			else if (p->pos.z + 0.5f > b->pos.z - 1.0f & p->pos.y - 0.5f < b->pos.y + 0.25f & p->pos.x - 0.5f < b->pos.x + 1.0f & p->pos.x + 0.5f > b->pos.x - 1)
+			{
+				b->pos.z = b->pos.z + dt * 3;
+			}
+			else if (p->pos.z - 0.5f > b->pos.z + 1.0f & p->pos.y - 0.5f < b->pos.y + 0.25f & p->pos.x - 0.5f < b->pos.x + 1.0f & p->pos.x + 0.5f > b->pos.x - 1)
+			{
+				b->pos.z = b->pos.z + dt * -3;
+			}
 			if (wnd.kbd.KeyIsPressed((VK_SPACE)) & p->pos.z - 0.75f < b->pos.z + 1.0f & p->pos.z + 0.75f > b->pos.z - 1.0f & p->pos.x - 0.75f < b->pos.x + 1.0f & p->pos.x + 0.75f > b->pos.x - 1.0f & grounded)
 			{
 				vdist = vdist + dt * 3;
@@ -161,17 +146,6 @@ void App::DoFrame()
 				//grounded = false;
 				vdist = vdist + dt * -3;
 			}
-			if (/*p->pos.y -0.5f <= b->pos.y + 0.25f &*/ (p->pos.z - 0.75f > b->pos.z + 1.0f || p->pos.z + 0.75f < b->pos.z - 1.0f || p->pos.x -0.75f > b->pos.x + 1.0f || p->pos.x + 0.75f < b->pos.x - 1.0f))
-			{
-				vdist = vdist + dt * -3;
-				//if (vdist == -4.0f)
-				//{
-				//	p->pos.y = 0.0f;
-				//}
-			}
-
-
-			//s->Draw(wnd.Gfx());
 		                                        
 		b->Draw(wnd.Gfx());
 	
