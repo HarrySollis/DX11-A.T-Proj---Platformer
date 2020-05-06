@@ -74,7 +74,11 @@ App::App()
 
 	wnd.Gfx().SetProjection(dx::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 40.0f));
 }
+
 bool grounded = true;
+bool jumping = false;
+bool falling = false;
+float jumpTimer = 0.0f;
 
 void App::DoFrame()
 {
@@ -88,6 +92,7 @@ void App::DoFrame()
 	
 	for (auto& p : player)
 	{
+
 		//rdist = 0.0f;
 		if (wnd.kbd.KeyIsPressed('W'))
 		{
@@ -105,11 +110,16 @@ void App::DoFrame()
 		{
 			ldist = ldist + dt * -4;
 		}
-		//if (wnd.kbd.KeyIsPressed((VK_SPACE)) )
-		//{
-		//	vdist = vdist + dt * 3;
-		//
-		//}
+		if (wnd.kbd.KeyIsPressed((VK_SPACE)) & grounded)
+		{
+			vdist = vdist + dt * 3;
+			jumping = true;
+		}
+		if (p->pos.y > 2.5f)
+		{
+			grounded = false;
+		}
+		
 
 		//if (vdist > 0 & !wnd.kbd.KeyIsPressed((VK_SPACE)))
 		//{
@@ -121,31 +131,71 @@ void App::DoFrame()
 		//}
 		for (auto& b : boxes)
 		{
-			if (p->pos.x + 0.5f > b->pos.x - 1 & p->pos.y - 0.5f < b->pos.y + 0.25f & p->pos.z + 0.5f > b->pos.z - 1.0f & p->pos.z - 0.5f < b->pos.z + 1.0f)
+			//Collision detection stuff here
+			//pushing box forward
+			if (p->pos.x + 0.5f > b->pos.x - 1 & p->pos.x - 0.5f < b->pos.x - 1 & p->pos.y - 0.5f < b->pos.y + 0.25f & p->pos.z + 0.5f > b->pos.z - 1.0f & p->pos.z - 0.5f < b->pos.z + 1.0f)
 			{
 				b->pos.x = b->pos.x +dt * 3;
 			}
-			else if (p->pos.z + 0.5f > b->pos.z - 1.0f & p->pos.y - 0.5f < b->pos.y + 0.25f & p->pos.x - 0.5f < b->pos.x + 1.0f & p->pos.x + 0.5f > b->pos.x - 1)
+			//pushing box backwards
+			else if (p->pos.x - 0.5f < b->pos.x + 1 & p->pos.x + 0.5f > b->pos.x + 1 & p->pos.y - 0.5f < b->pos.y + 0.25f & p->pos.z + 0.5f > b->pos.z - 1.0f & p->pos.z - 0.5f < b->pos.z + 1.0f)
 			{
-				b->pos.z = b->pos.z + dt * 3;
+				b->pos.x = b->pos.x + dt * -3;
 			}
-			else if (p->pos.z - 0.5f > b->pos.z + 1.0f & p->pos.y - 0.5f < b->pos.y + 0.25f & p->pos.x - 0.5f < b->pos.x + 1.0f & p->pos.x + 0.5f > b->pos.x - 1)
+			//pushing box right
+			else if (p->pos.z + 0.75f > b->pos.z - 1.0f & p->pos.z - 0.75f < b->pos.z - 1 & p->pos.y - 0.5f < b->pos.y + 0.25f & p->pos.x - 0.5f < b->pos.x + 1.0f & p->pos.x + 0.5f > b->pos.x - 1)
 			{
-				b->pos.z = b->pos.z + dt * -3;
+				b->pos.z = b->pos.z + dt * 4;
 			}
-			if (wnd.kbd.KeyIsPressed((VK_SPACE)) & p->pos.z - 0.75f < b->pos.z + 1.0f & p->pos.z + 0.75f > b->pos.z - 1.0f & p->pos.x - 0.75f < b->pos.x + 1.0f & p->pos.x + 0.75f > b->pos.x - 1.0f & grounded)
+			//pushing box left
+			else if (p->pos.z - 0.75f < b->pos.z + 1.0f & p->pos.z + 0.75f > b->pos.z + 1 & p->pos.y - 0.5f < b->pos.y + 0.25f & p->pos.x - 0.5f < b->pos.x + 1.0f & p->pos.x + 0.5f > b->pos.x - 1)
 			{
-				vdist = vdist + dt * 3;
+				b->pos.z = b->pos.z + dt * -4;
 			}
-			if (p->pos.y >= 3)
+
+			//jumping
+			if (jumping & p->pos.y - 0.75f > b->pos.y + 0.25f & p->pos.x + 0.75 > b->pos.x - 1.0f & p->pos.x - 0.75 < b->pos.x + 1.0f & p->pos.z + 0.75f > b->pos.z -1.0f & p->pos.z - 0.75f < b->pos.z + 1.0f)
 			{
-				//grounded = false;
-			}
-			if (!wnd.kbd.KeyIsPressed((VK_SPACE)) & p->pos.y - 0.75f > b->pos.y + 0.5f & p->pos.z - 0.75f < b->pos.z + 1.0f & p->pos.z + 0.75f > b->pos.z - 1.0f & p->pos.x - 0.75f < b->pos.x + 1.0f & p->pos.x + 0.75f > b->pos.x - 1.0f)
-			{
-				//grounded = false;
+
 				vdist = vdist + dt * -3;
+				grounded = true;
+				
+				if (p->pos.y - 0.75f <= b->pos.y + 0.5f)
+				{	
+					jumping = false;
+					
+				}
 			}
+			if (!grounded & p->pos.y - 0.75f > b->pos.y - 1.0f || p->pos.y - 0.75f < b->pos.y -0.6f & p->pos.x + 0.75 < b->pos.x - 1.0f & p->pos.x - 0.75 > b->pos.x + 1.0f & p->pos.z + 0.75f < b->pos.z -1.0f & p->pos.z - 0.75f > b->pos.z + 1.0f)
+			{
+				falling = true;
+				vdist = vdist + dt * -3;
+				
+				if (p->pos.y - 0.75f < b->pos.y - 0.6f)
+				{
+					falling = false;
+					//jumping = false;
+					grounded = true;
+				}
+			}
+			//if (p->pos.y - 0.75f > b->pos.y + 0.25f /*& p->pos.x + 0.75 > b->pos.x - 1.0f & p->pos.x - 0.75 < b->pos.x + 1.0f & p->pos.z + 0.75f > b->pos.z - 1.0f & p->pos.z - 0.75f < b->pos.z + 1.0f*/)
+			//{
+			//	vdist = vdist + dt * -3;
+			//	grounded = true;
+			//}
+			//if (wnd.kbd.KeyIsPressed((VK_SPACE)) & p->pos.z - 0.75f < b->pos.z + 1.0f & p->pos.z + 0.75f > b->pos.z - 1.0f & p->pos.x - 0.75f < b->pos.x + 1.0f & p->pos.x + 0.75f > b->pos.x - 1.0f & grounded)
+			//{
+			//	vdist = vdist + dt * 3;
+			//}
+			//if (p->pos.y >= 3)
+			//{
+			//	//grounded = false;
+			//}
+			//if (p->pos.y - 0.75f > b->pos.y + 0.5f & !(p->pos.z - 0.75f < b->pos.z + 1.0f & p->pos.z + 0.75f > b->pos.z - 1.0f & p->pos.x - 0.75f < b->pos.x + 1.0f & p->pos.x + 0.75f > b->pos.x - 1.0f))
+			//{
+			//	//grounded = false;
+			//	vdist = vdist + dt * -3;
+			//}
 		                                        
 		b->Draw(wnd.Gfx());
 	
