@@ -114,10 +114,19 @@ void App::DoFrame()
 		{
 			vdist = vdist + dt * 3;
 			jumping = true;
+			//falling = true;
 		}
-		if (p->pos.y > 2.5f)
+		if (p->pos.y > 2.5f || (jumping || falling) & !wnd.kbd.KeyIsPressed((VK_SPACE)))
 		{
+			vdist = vdist + dt * -4;
 			grounded = false;
+			falling = true;
+		}
+		if (p->pos.y < -1.0f )
+		{
+			falling = false;
+			grounded = true;
+			jumping = false;
 		}
 		
 
@@ -154,30 +163,48 @@ void App::DoFrame()
 			}
 
 			//jumping
-			if (jumping & p->pos.y - 0.75f > b->pos.y + 0.25f & p->pos.x + 0.75 > b->pos.x - 1.0f & p->pos.x - 0.75 < b->pos.x + 1.0f & p->pos.z + 0.75f > b->pos.z -1.0f & p->pos.z - 0.75f < b->pos.z + 1.0f)
+			if (/*(grounded & p->pos.y > -1.0f)*/ falling & (p->pos.z - 0.75f > b->pos.z + 1.0f || p->pos.z + 0.75f < b->pos.z - 1.0f || p->pos.x - 0.75f > b->pos.x + 1.0f || p->pos.x + 0.75f < b->pos.x - 1.0f))
 			{
-
-				vdist = vdist + dt * -3;
+				falling = false;
+			}
+			if ((jumping || !grounded || falling) & p->pos.y - 0.75f < b->pos.y + 0.25f & p->pos.x + 0.75 > b->pos.x - 1.0f & p->pos.x - 0.75 < b->pos.x + 1.0f & p->pos.z + 0.75f > b->pos.z -1.0f & p->pos.z - 0.75f < b->pos.z + 1.0f)
+			{
+				jumping = false;
 				grounded = true;
-				
-				if (p->pos.y - 0.75f <= b->pos.y + 0.5f)
-				{	
-					jumping = false;
-					
-				}
+				falling = false;
 			}
-			if (!grounded & p->pos.y - 0.75f > b->pos.y - 1.0f || p->pos.y - 0.75f < b->pos.y -0.6f & p->pos.x + 0.75 < b->pos.x - 1.0f & p->pos.x - 0.75 > b->pos.x + 1.0f & p->pos.z + 0.75f < b->pos.z -1.0f & p->pos.z - 0.75f > b->pos.z + 1.0f)
-			{
-				falling = true;
-				vdist = vdist + dt * -3;
-				
-				if (p->pos.y - 0.75f < b->pos.y - 0.6f)
-				{
-					falling = false;
-					//jumping = false;
-					grounded = true;
-				}
-			}
+			//else if ((falling /*& (p->pos.z - 0.75f > b->pos.z + 1.0f || p->pos.z + 0.75f < b->pos.z - 1.0f || p->pos.x - 0.75f > b->pos.x + 1.0f || p->pos.x + 0.75f < b->pos.x - 1.0f))*/))
+			//{
+			//	vdist = vdist + dt * -3;
+			//	//if (p->pos.y - 0.75f <= -2.0f)
+			//	//{
+			//	//	falling = false;
+			//	//	grounded = true;
+			//	//	
+			//	//}
+			//}
+			//else if (falling & p->pos.y - 0.75f >= b->pos.y - 1.0f & (p->pos.z - 0.75f > b->pos.z + 1.0f || p->pos.z + 0.75f < b->pos.z - 1.0f || p->pos.x - 0.75f > b->pos.x + 1.0f || p->pos.x + 0.75f < b->pos.x - 1.0f))
+			//{
+			//	vdist = vdist + dt * -3;
+			//	if (p->pos.y - 0.75f <= b->pos.y - 1.0f)
+			//	{
+			//		falling = false;
+			//		grounded = true;
+			//
+			//	}
+			//}
+			//if (!grounded & p->pos.y - 0.75f > b->pos.y - 1.0f /*|| p->pos.y - 0.75f < b->pos.y -0.6f & p->pos.x + 0.75 < b->pos.x - 1.0f & p->pos.x - 0.75 > b->pos.x + 1.0f & p->pos.z + 0.75f < b->pos.z -1.0f & p->pos.z - 0.75f > b->pos.z + 1.0f*/)
+			//{
+			//	falling = true;
+			//	vdist = vdist + dt * -3;
+			//	
+			//	if (p->pos.y - 0.75f < b->pos.y - 0.6f)
+			//	{
+			//		falling = false;
+			//		//jumping = false;
+			//		grounded = true;
+			//	}
+			//}
 			//if (p->pos.y - 0.75f > b->pos.y + 0.25f /*& p->pos.x + 0.75 > b->pos.x - 1.0f & p->pos.x - 0.75 < b->pos.x + 1.0f & p->pos.z + 0.75f > b->pos.z - 1.0f & p->pos.z - 0.75f < b->pos.z + 1.0f*/)
 			//{
 			//	vdist = vdist + dt * -3;
