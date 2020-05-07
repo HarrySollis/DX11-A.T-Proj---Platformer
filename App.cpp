@@ -78,6 +78,8 @@ App::App()
 bool grounded = true;
 bool jumping = false;
 bool falling = false;
+bool hitTop = false;
+
 float jumpTimer = 0.0f;
 
 void App::DoFrame()
@@ -96,7 +98,7 @@ void App::DoFrame()
 		//rdist = 0.0f;
 		if (wnd.kbd.KeyIsPressed('W'))
 		{
-			rdist = rdist + dt * 3;
+			rdist = rdist + dt * 4;
 		}
 		if (wnd.kbd.KeyIsPressed('A'))
 		{
@@ -104,30 +106,39 @@ void App::DoFrame()
 		}
 		if (wnd.kbd.KeyIsPressed('S'))
 		{
-			rdist = rdist + dt * -3;
+			rdist = rdist + dt * -4;
 		}
 		if (wnd.kbd.KeyIsPressed('D'))
 		{
 			ldist = ldist + dt * -4;
 		}
-		if (wnd.kbd.KeyIsPressed((VK_SPACE)) & grounded)
+		if (wnd.kbd.KeyIsPressed((VK_SPACE)) & grounded & !hitTop)
 		{
-			vdist = vdist + dt * 3;
+			//vdist = vdist + dt * 30;
 			jumping = true;
 			//falling = true;
 		}
-		if (p->pos.y > 2.5f || (jumping || falling) & !wnd.kbd.KeyIsPressed((VK_SPACE)))
+		if (hitTop)
 		{
-			vdist = vdist + dt * -4;
+			jumping = false;
+			falling = true;
+		}
+		if ((falling))
+		{
+			vdist = vdist + dt * -8;
 			grounded = false;
 			falling = true;
 		}
-		if (p->pos.y < -1.0f )
+		if (jumping)
 		{
-			falling = false;
-			grounded = true;
-			jumping = false;
+			vdist = vdist + dt * 8;
 		}
+		//if ( )
+		//{
+		//	falling = false;
+		//	grounded = true;
+		//	jumping = false;
+		//}
 		
 
 		//if (vdist > 0 & !wnd.kbd.KeyIsPressed((VK_SPACE)))
@@ -144,12 +155,12 @@ void App::DoFrame()
 			//pushing box forward
 			if (p->pos.x + 0.5f > b->pos.x - 1 & p->pos.x - 0.5f < b->pos.x - 1 & p->pos.y - 0.5f < b->pos.y + 0.25f & p->pos.z + 0.5f > b->pos.z - 1.0f & p->pos.z - 0.5f < b->pos.z + 1.0f)
 			{
-				b->pos.x = b->pos.x +dt * 3;
+				b->pos.x = b->pos.x +dt * 4;
 			}
 			//pushing box backwards
 			else if (p->pos.x - 0.5f < b->pos.x + 1 & p->pos.x + 0.5f > b->pos.x + 1 & p->pos.y - 0.5f < b->pos.y + 0.25f & p->pos.z + 0.5f > b->pos.z - 1.0f & p->pos.z - 0.5f < b->pos.z + 1.0f)
 			{
-				b->pos.x = b->pos.x + dt * -3;
+				b->pos.x = b->pos.x + dt * -4;
 			}
 			//pushing box right
 			else if (p->pos.z + 0.75f > b->pos.z - 1.0f & p->pos.z - 0.75f < b->pos.z - 1 & p->pos.y - 0.5f < b->pos.y + 0.25f & p->pos.x - 0.5f < b->pos.x + 1.0f & p->pos.x + 0.5f > b->pos.x - 1)
@@ -163,71 +174,45 @@ void App::DoFrame()
 			}
 
 			//jumping
-			if (/*(grounded & p->pos.y > -1.0f)*/ falling & (p->pos.z - 0.75f > b->pos.z + 1.0f || p->pos.z + 0.75f < b->pos.z - 1.0f || p->pos.x - 0.75f > b->pos.x + 1.0f || p->pos.x + 0.75f < b->pos.x - 1.0f))
-			{
-				falling = false;
-			}
-			if ((jumping || !grounded || falling) & p->pos.y - 0.75f < b->pos.y + 0.25f & p->pos.x + 0.75 > b->pos.x - 1.0f & p->pos.x - 0.75 < b->pos.x + 1.0f & p->pos.z + 0.75f > b->pos.z -1.0f & p->pos.z - 0.75f < b->pos.z + 1.0f)
+			//if (/*(grounded & p->pos.y > -1.0f)*/ falling & (p->pos.z - 0.75f > b->pos.z + 1.0f || p->pos.z + 0.75f < b->pos.z - 1.0f || p->pos.x - 0.75f > b->pos.x + 1.0f || p->pos.x + 0.75f < b->pos.x - 1.0f))
+			//{
+			//	falling = false;
+			//}
+			if (p->pos.y < -1.0f || ((p->pos.y - 0.75f < b->pos.y + 0.25f & (p->pos.y + 0.75f > b->pos.y + 0.25f) )  & p->pos.x + 0.75 > b->pos.x - 1.0f & p->pos.x - 0.75 < b->pos.x + 1.0f & p->pos.z + 0.75f > b->pos.z -1.0f & p->pos.z - 0.75f < b->pos.z + 1.0f))
 			{
 				jumping = false;
 				grounded = true;
+				hitTop = false;
 				falling = false;
+				break;
 			}
-			//else if ((falling /*& (p->pos.z - 0.75f > b->pos.z + 1.0f || p->pos.z + 0.75f < b->pos.z - 1.0f || p->pos.x - 0.75f > b->pos.x + 1.0f || p->pos.x + 0.75f < b->pos.x - 1.0f))*/))
-			//{
-			//	vdist = vdist + dt * -3;
-			//	//if (p->pos.y - 0.75f <= -2.0f)
-			//	//{
-			//	//	falling = false;
-			//	//	grounded = true;
-			//	//	
-			//	//}
-			//}
-			//else if (falling & p->pos.y - 0.75f >= b->pos.y - 1.0f & (p->pos.z - 0.75f > b->pos.z + 1.0f || p->pos.z + 0.75f < b->pos.z - 1.0f || p->pos.x - 0.75f > b->pos.x + 1.0f || p->pos.x + 0.75f < b->pos.x - 1.0f))
-			//{
-			//	vdist = vdist + dt * -3;
-			//	if (p->pos.y - 0.75f <= b->pos.y - 1.0f)
-			//	{
-			//		falling = false;
-			//		grounded = true;
-			//
-			//	}
-			//}
-			//if (!grounded & p->pos.y - 0.75f > b->pos.y - 1.0f /*|| p->pos.y - 0.75f < b->pos.y -0.6f & p->pos.x + 0.75 < b->pos.x - 1.0f & p->pos.x - 0.75 > b->pos.x + 1.0f & p->pos.z + 0.75f < b->pos.z -1.0f & p->pos.z - 0.75f > b->pos.z + 1.0f*/)
-			//{
-			//	falling = true;
-			//	vdist = vdist + dt * -3;
-			//	
-			//	if (p->pos.y - 0.75f < b->pos.y - 0.6f)
-			//	{
-			//		falling = false;
-			//		//jumping = false;
-			//		grounded = true;
-			//	}
-			//}
-			//if (p->pos.y - 0.75f > b->pos.y + 0.25f /*& p->pos.x + 0.75 > b->pos.x - 1.0f & p->pos.x - 0.75 < b->pos.x + 1.0f & p->pos.z + 0.75f > b->pos.z - 1.0f & p->pos.z - 0.75f < b->pos.z + 1.0f*/)
-			//{
-			//	vdist = vdist + dt * -3;
-			//	grounded = true;
-			//}
-			//if (wnd.kbd.KeyIsPressed((VK_SPACE)) & p->pos.z - 0.75f < b->pos.z + 1.0f & p->pos.z + 0.75f > b->pos.z - 1.0f & p->pos.x - 0.75f < b->pos.x + 1.0f & p->pos.x + 0.75f > b->pos.x - 1.0f & grounded)
-			//{
-			//	vdist = vdist + dt * 3;
-			//}
-			//if (p->pos.y >= 3)
-			//{
-			//	//grounded = false;
-			//}
-			//if (p->pos.y - 0.75f > b->pos.y + 0.5f & !(p->pos.z - 0.75f < b->pos.z + 1.0f & p->pos.z + 0.75f > b->pos.z - 1.0f & p->pos.x - 0.75f < b->pos.x + 1.0f & p->pos.x + 0.75f > b->pos.x - 1.0f))
-			//{
-			//	//grounded = false;
-			//	vdist = vdist + dt * -3;
-			//}
+			else if(!jumping)
+			{
+				falling = true;
+				grounded = false;
+			}
+			else
+			{
+				grounded = false;
+			}
+			if (p->pos.y > 2.5f || ((p->pos.y + 0.75f > b->pos.y - 0.25f & (p->pos.y - 0.75f < b->pos.y - 0.25f)) & p->pos.x + 0.75 > b->pos.x - 1.0f & p->pos.x - 0.75 < b->pos.x + 1.0f & p->pos.z + 0.75f > b->pos.z - 1.0f & p->pos.z - 0.75f < b->pos.z + 1.0f))
+			{
+				hitTop = true;
+				//jumping = false;
+				break;
+			}
+			else
+			{
+				hitTop = false;
+			}
 		                                        
-		b->Draw(wnd.Gfx());
+		
 	
 		}
-
+		for (auto& b : boxes)
+		{
+			b->Draw(wnd.Gfx());
+		}
 		p->Translate(rdist, vdist, ldist);
 		p->Draw(wnd.Gfx());
 		
@@ -241,7 +226,7 @@ void App::DoFrame()
 	}
 	if (wnd.kbd.KeyIsPressed('A'))
 	{
-		cam.Translate({ -dt / 3.0f,0.0f,0.0f });
+		cam.Translate({ -dt / 4.0f,0.0f,0.0f });
 	}
 	if (wnd.kbd.KeyIsPressed('S'))
 	{
@@ -249,7 +234,7 @@ void App::DoFrame()
 	}
 	if (wnd.kbd.KeyIsPressed('D'))
 	{
-		cam.Translate({ dt / 3.0f,0.0f,0.0f });
+		cam.Translate({ dt / 4.0f,0.0f,0.0f });
 	}
 	//if (wnd.kbd.KeyIsPressed('R'))
 	//{
