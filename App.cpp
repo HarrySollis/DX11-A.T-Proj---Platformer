@@ -153,25 +153,26 @@ void App::DoFrame()
 		{
 			//Collision detection stuff here
 			//pushing box forward
-			if (p->pos.x + 0.5f > b->pos.x - 1 & p->pos.x - 0.5f < b->pos.x - 1 & p->pos.y - 0.5f < b->pos.y + 0.25f & p->pos.z + 0.5f > b->pos.z - 1.0f & p->pos.z - 0.5f < b->pos.z + 1.0f)
+			if (p->pos.x /*+ 0.25f*/ > b->pos.x - 1.0f & p-> pos.x /*- 0.25f*/ < b->pos.x - 1.0f & p->pos.y - 0.5f < b->pos.y + 0.25f & p->pos.z + 0.5f > b->pos.z - 1.0f & p->pos.z - 0.5f < b->pos.z + 1.0f)
 			{
 				b->pos.x = b->pos.x +dt * 4;
 			}
 			//pushing box backwards
-			else if (p->pos.x - 0.5f < b->pos.x + 1 & p->pos.x + 0.5f > b->pos.x + 1 & p->pos.y - 0.5f < b->pos.y + 0.25f & p->pos.z + 0.5f > b->pos.z - 1.0f & p->pos.z - 0.5f < b->pos.z + 1.0f)
+			else if (p->pos.x /*- 0.15f*/ < b->pos.x + 1.0f & p->pos.x /*+ 0.15f*/ > b->pos.x + 1.0f & p->pos.y - 0.5f < b->pos.y + 0.25f & p->pos.z + 0.5f > b->pos.z - 1.0f & p->pos.z - 0.5f < b->pos.z + 1.0f)
 			{
 				b->pos.x = b->pos.x + dt * -4;
 			}
 			//pushing box right
-			else if (p->pos.z + 0.75f > b->pos.z - 1.0f & p->pos.z - 0.75f < b->pos.z - 1 & p->pos.y - 0.5f < b->pos.y + 0.25f & p->pos.x - 0.5f < b->pos.x + 1.0f & p->pos.x + 0.5f > b->pos.x - 1)
+			else if (p->pos.z + 0.75f > b->pos.z - 1.0f & p->pos.z - 0.75f < b->pos.z - 1.0f & p->pos.y - 0.5f < b->pos.y + 0.25f & p->pos.x - 0.5f < b->pos.x + 1.0f & p->pos.x + 0.5f > b->pos.x - 1)
 			{
 				b->pos.z = b->pos.z + dt * 4;
 			}
 			//pushing box left
-			else if (p->pos.z - 0.75f < b->pos.z + 1.0f & p->pos.z + 0.75f > b->pos.z + 1 & p->pos.y - 0.5f < b->pos.y + 0.25f & p->pos.x - 0.5f < b->pos.x + 1.0f & p->pos.x + 0.5f > b->pos.x - 1)
+			else if (p->pos.z - 0.75f < b->pos.z + 1.0f & p->pos.z + 0.75f > b->pos.z + 1.0f & p->pos.y - 0.5f < b->pos.y + 0.25f & p->pos.x - 0.5f < b->pos.x + 1.0f & p->pos.x + 0.5f > b->pos.x - 1)
 			{
 				b->pos.z = b->pos.z + dt * -4;
 			}
+
 
 			//jumping
 			//if (/*(grounded & p->pos.y > -1.0f)*/ falling & (p->pos.z - 0.75f > b->pos.z + 1.0f || p->pos.z + 0.75f < b->pos.z - 1.0f || p->pos.x - 0.75f > b->pos.x + 1.0f || p->pos.x + 0.75f < b->pos.x - 1.0f))
@@ -195,7 +196,7 @@ void App::DoFrame()
 			{
 				grounded = false;
 			}
-			if (p->pos.y > 2.5f || ((p->pos.y + 0.75f > b->pos.y - 0.25f & (p->pos.y - 0.75f < b->pos.y - 0.25f)) & p->pos.x + 0.75 > b->pos.x - 1.0f & p->pos.x - 0.75 < b->pos.x + 1.0f & p->pos.z + 0.75f > b->pos.z - 1.0f & p->pos.z - 0.75f < b->pos.z + 1.0f))
+			if (p->pos.y > 3.5f || ((p->pos.y + 0.75f > b->pos.y - 0.25f & (p->pos.y - 0.75f < b->pos.y - 0.25f)) & p->pos.x + 0.75 > b->pos.x - 1.0f & p->pos.x - 0.75 < b->pos.x + 1.0f & p->pos.z + 0.75f > b->pos.z - 1.0f & p->pos.z - 0.75f < b->pos.z + 1.0f))
 			{
 				hitTop = true;
 				//jumping = false;
